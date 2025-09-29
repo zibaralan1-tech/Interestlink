@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const action = target.getAttribute('data-action');
         if (action === 'logout') {
             localStorage.removeItem('interestLinkProfile');
-            window.location.href = 'Index (1).html';
+            window.location.href = 'index.html';
         }
         closeDropdown();
     });
