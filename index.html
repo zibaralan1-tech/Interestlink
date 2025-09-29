@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterestLink - Inloggen</title>
+    <link rel="stylesheet" href="Style.css">
+    <style>
+        /* Login specific styles */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .step.completed {
+            background: #22c55e;
+            color: white;
+        }
+
+        .step.active {
+            background: #3b82f6;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step.inactive {
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        .login-form {
+            position: relative;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .year-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .year-option {
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            text-align: center;
+        }
+
+        .year-option:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .year-option.selected {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            transform: scale(1.05);
+        }
+
+        .year-option .year-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3b82f6;
+            margin-bottom: 5px;
+        }
+
+        .year-option .year-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .class-option {
+            padding: 15px 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .class-option:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .class-option.selected {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .welcome-message {
+            display: none;
+            text-align: center;
+            animation: celebrationBounce 1s ease;
+        }
+
+        .welcome-message.show {
+            display: block;
+        }
+
+        @keyframes celebrationBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        .celebration-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+        }
+
+        .back-btn.show {
+            display: block;
+        }
+
+        /* Student selection styles */
+        .students-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .students-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .student-option {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-option:hover {
+            border-color: #3b82f6;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-option.selected {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            color: #3b82f6;
+            transform: scale(1.02);
+        }
+
+        .student-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .student-number {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Custom scrollbar for students container */
+        .students-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .students-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .students-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .students-container::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <button class="back-btn" id="backBtn">←</button>
+        
+        <div class="login-header">
+            <h1>🎓 InterestLink</h1>
+            <p>Welkom! Laten we je profiel instellen</p>
+                    </div>
+
+        <div class="step-indicator">
+            <div class="step active" data-step="1">1</div>
+            <div class="step inactive" data-step="2">2</div>
+            <div class="step inactive" data-step="3">3</div>
+            <div class="step inactive" data-step="4">4</div>
+                </div>
+
+        <form class="login-form" id="loginForm">
+            <!-- Step 1: Jaar kiezen -->
+            <div class="step-content active" id="step1">
+                <div class="form-group">
+                    <label>📅 In welk jaar zit je?</label>
+                    <div class="year-grid">
+                        <div class="year-option" data-year="1">
+                            <div class="year-number">1</div>
+                            <div class="year-label">Eerste jaar</div>
+                    </div>
+                        <div class="year-option" data-year="2">
+                            <div class="year-number">2</div>
+                            <div class="year-label">Tweede jaar</div>
+                                    </div>
+                        <div class="year-option" data-year="3">
+                            <div class="year-number">3</div>
+                            <div class="year-label">Derde jaar</div>
+                                </div>
+                        <div class="year-option" data-year="4">
+                            <div class="year-number">4</div>
+                            <div class="year-label">Vierde jaar</div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="nextStep1" disabled>Volgende</button>
+            </div>
+
+            <!-- Step 2: Klas kiezen -->
+            <div class="step-content" id="step2">
+                <div class="form-group">
+                    <label>🏫 Welke klas?</label>
+                    <div class="class-grid" id="classOptions">
+                        <!-- Klassen worden hier dynamisch geladen -->
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="nextStep2" disabled>Volgende</button>
+                <button type="button" class="btn btn-secondary" id="backStep2">Terug</button>
+                </div>
+
+            <!-- Step 3: Leerling kiezen -->
+            <div class="step-content" id="step3">
+                <div class="form-group">
+                    <label>👥 Selecteer je naam uit de lijst:</label>
+                    <div class="student-search-container" style="margin-bottom: 15px;">
+                        <input type="text" class="form-input" id="studentSearch" placeholder="🔍 Zoek je naam..." style="margin-bottom: 10px;">
+                            </div>
+                    <div class="students-container" id="studentsContainer">
+                        <div class="students-grid" id="studentsGrid">
+                            <!-- Leerlingen worden hier dynamisch geladen -->
+                        </div>
+                    </div>
+                    <div class="not-found-section" style="text-align: center; margin-top: 20px; display: none;" id="notFoundSection">
+                        <p style="color: #666; margin-bottom: 15px;">💭 Sta je niet in de lijst?</p>
+                        <button type="button" class="btn" id="addCustomName" style="background: #f59e0b; color: white; padding: 10px 20px;">➕ Voeg je naam toe</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="nextStep3" disabled>Volgende</button>
+                <button type="button" class="btn btn-secondary" id="backStep3">Terug</button>
+                            </div>
+                            
+            <!-- Step 4: Bevestiging -->
+            <div class="step-content" id="step4">
+                <div class="confirmation-content" style="text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">✅</div>
+                    <h3 style="margin-bottom: 15px;">Controleer je gegevens</h3>
+                    <div class="confirmation-details" style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left;">
+                        <div class="detail-row" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong>📅 Jaar:</strong>
+                            <span id="confirmYear"></span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong>🏫 Klas:</strong>
+                            <span id="confirmClass"></span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between;">
+                            <strong>👤 Naam:</strong>
+                            <span id="confirmName"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="finishSetup">🚀 Inloggen als <span id="loginAsName"></span></button>
+                <button type="button" class="btn btn-secondary" id="backStep4">Terug</button>
+            </div>
+
+            <!-- Welcome message -->
+            <div class="welcome-message" id="welcomeMessage">
+                <div class="celebration-emoji">🎉</div>
+                <h2>Welkom, <span id="finalUserName"></span>!</h2>
+                <p>Je profiel is succesvol aangemaakt.</p>
+                <p><strong>Jaar:</strong> <span id="finalYear"></span> | <strong>Klas:</strong> <span id="finalClass"></span></p>
+                <button type="button" class="btn btn-primary" id="goToApp">Ga naar InterestLink</button>
+            </div>
+        </form>
+            </div>
+
+    <script>
+        // State management
+        let currentStep = 1;
+        let selectedYear = null;
+        let selectedClass = null;
+        let selectedStudent = null;
+
+        // Klas opties per jaar
+        const classOptions = {
+            1: ['Tribe Inge & Noah', 'Tribe Gert & Rosa', 'Tribe Bernard & Roel',],
+            2: ['TICT-V2A', 'TICT-V2B', 'TICT-V2C', 'TICT-V2D'],
+            3: ['TICT-V3A', 'TICT-V3B', 'TICT-V3C', 'TICT-V3D'],
+            4: ['TICT-V4A', 'TICT-V4B', 'TICT-V4C', 'TICT-V4D']
+        };
+
+        // Student database - alle tribes hebben dezelfde uitgebreide lijst
+        const tribeStudents = [
+            { name: 'Berkay Geckin', number: '1001' },
+            { name: 'Jabir Ghalit', number: '1002' },
+            { name: 'Alan Zibar', number: '1003' },
+            { name: 'Yassine Bousklati', number: '1004' },
+            { name: 'Hudayfi Mahamud', number: '1005' },
+            { name: 'Victor Cardona Bedoya', number: '1006' },
+            { name: 'Abdimalik Farah', number: '1007' },
+            { name: 'Achmed Mahamud', number: '1008' },
+            { name: 'Tuka Alwekil', number: '1009' },
+            { name: 'Bento Buijkx', number: '1010' },
+            { name: 'Bros Milo', number: '1011' },
+            { name: 'Bram Arendse', number: '1012' },
+            { name: 'Chiel Suttorp', number: '1013' },
+            { name: 'Danny Landvreugd', number: '1014' },
+            { name: 'David Vlastuin', number: '1015' },
+            { name: 'Emma Huizinga', number: '1016' },
+            { name: 'Geronimo Chobin', number: '1017' },
+            { name: 'Hidde de Kievit', number: '1018' },
+            { name: 'Huub Duking', number: '1019' },
+            { name: 'Jochem van de Biezen', number: '1020' },
+            { name: 'Julian Contact', number: '1021' },
+            { name: 'Lounbna Mellouki', number: '1022' },
+            { name: 'Manar Majdoubi', number: '1023' },
+            { name: 'Marissa Meerbach', number: '1024' },
+            { name: 'Mark Rijnveld', number: '1025' },
+            { name: 'Oscar Puit', number: '1026' },
+            { name: 'Thomas Tuinstra', number: '1027' },
+            { name: 'Tibo Melis', number: '1028' },
+            { name: 'Yuri Stokking', number: '1029' },
+        ];
+
+        const studentDatabase = {
+            'Tribe Inge & Noah': tribeStudents,
+            'Tribe Gert & Rosa': tribeStudents,
+            'Tribe Bernard & Roel': tribeStudents,
+            // Andere jaren/klassen kunnen later worden toegevoegd
+        };
+
+        // Elements
+        const steps = document.querySelectorAll('.step');
+        const stepContents = document.querySelectorAll('.step-content');
+        const yearOptions = document.querySelectorAll('.year-option');
+        const classOptionsContainer = document.getElementById('classOptions');
+        const studentsGrid = document.getElementById('studentsGrid');
+        const studentSearch = document.getElementById('studentSearch');
+        const nextStep1 = document.getElementById('nextStep1');
+        const nextStep2 = document.getElementById('nextStep2');
+        const nextStep3 = document.getElementById('nextStep3');
+        const finishSetup = document.getElementById('finishSetup');
+        const backBtns = document.querySelectorAll('[id^="back"]');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const goToApp = document.getElementById('goToApp');
+        const confirmYear = document.getElementById('confirmYear');
+        const confirmClass = document.getElementById('confirmClass');
+        const confirmName = document.getElementById('confirmName');
+        const loginAsName = document.getElementById('loginAsName');
+
+        // Update step indicator
+        function updateStepIndicator(step) {
+            steps.forEach((s, index) => {
+                const stepNum = index + 1;
+                s.classList.remove('active', 'completed', 'inactive');
+                
+                if (stepNum < step) {
+                    s.classList.add('completed');
+                } else if (stepNum === step) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.add('inactive');
+                }
+            });
+        }
+
+        // Show step content
+        function showStep(step) {
+            stepContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            // Show/hide back button
+            const backBtn = document.getElementById('backBtn');
+            if (step > 1) {
+                backBtn.classList.add('show');
+            } else {
+                backBtn.classList.remove('show');
+            }
+        }
+
+        // Load class options based on selected year
+        function loadClassOptions(year) {
+            classOptionsContainer.innerHTML = '';
+            const classes = classOptions[year];
+            
+            classes.forEach(className => {
+                const classDiv = document.createElement('div');
+                classDiv.className = 'class-option';
+                classDiv.textContent = className;
+                classDiv.dataset.class = className;
+                classDiv.addEventListener('click', selectClass);
+                classOptionsContainer.appendChild(classDiv);
+            });
+        }
+
+        // Load students based on selected class
+        function loadStudents(className) {
+            studentsGrid.innerHTML = '';
+            let students = studentDatabase[className] || [];
+            
+            // Als er geen lijst is voor deze klas, genereer een tijdelijke lijst
+            if (students.length === 0) {
+                students = generateStudentsForClass(className, 24);
+                studentDatabase[className] = students; // cache voor deze sessie
+            }
+            
+            students.forEach(student => {
+                const studentDiv = document.createElement('div');
+                studentDiv.className = 'student-option';
+                studentDiv.dataset.studentName = student.name;
+                studentDiv.dataset.studentNumber = student.number;
+                
+                // Initialen
+                const initials = student.name.split(' ').map(n => n.charAt(0)).join('').substring(0, 2).toUpperCase();
+                
+                studentDiv.innerHTML = `
+                    <div class="student-avatar">${initials}</div>
+                    <div class="student-info">
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-number">Studentnummer: ${student.number}</div>
+                </div>
+                `;
+                
+                studentDiv.addEventListener('click', selectStudent);
+                studentsGrid.appendChild(studentDiv);
+            });
+        }
+        
+        // Genereer placeholder leerlingen voor een klas
+        function generateStudentsForClass(className, count = 20) {
+            const firstNames = ['Aiden','Emma','Lucas','Sophie','Thijs','Anna','Daan','Lara','Finn','Noa','Milan','Zoë','Sem','Lotte','Ravi','Isa','Noah','Eva','Max','Luna','Bram','Fleur','Jesse','Mila','Owen','Jade','Luuk','Roos','Jayden','Lilly','Sam','Chloe','Ryan','Tess','Kai','Lynn','Levi','Olivia','Tygo','Sara'];
+            const lastNames = ['van Dijk','Jansen','de Vries','Bakker','Mulder','de Boer','Visser','Smit','Meijer','de Wit','de Jong','Peters','Koster','Vermeulen','Hendricks','van den Berg','de Graaf','Koning','van Houten','Martens'];
+            const students = [];
+            const base = Math.floor(Math.random() * 8000) + 2000; // random basis per sessie
+            for (let i = 0; i < count; i++) {
+                const fname = firstNames[i % firstNames.length];
+                const lname = lastNames[i % lastNames.length];
+                students.push({
+                    name: `${fname} ${lname}`,
+                    number: String(base + i)
+                });
+            }
+            return students;
+        }
+
+        // Filter students based on search
+        function filterStudents(searchTerm) {
+            const studentOptions = document.querySelectorAll('.student-option');
+            let visibleCount = 0;
+            
+            studentOptions.forEach(option => {
+                const name = option.dataset.studentName.toLowerCase();
+                const number = option.dataset.studentNumber.toLowerCase();
+                const matches = name.includes(searchTerm.toLowerCase()) || number.includes(searchTerm.toLowerCase());
+                
+                if (matches || searchTerm === '') {
+                    option.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+            
+            // Show "not found" section if no results
+            const notFoundSection = document.getElementById('notFoundSection');
+            if (visibleCount === 0 && searchTerm !== '' && studentOptions.length > 0) {
+                notFoundSection.style.display = 'block';
+            } else {
+                notFoundSection.style.display = 'none';
+            }
+        }
+
+        // Select year
+        function selectYear(event) {
+            const yearOption = event.currentTarget;
+            const year = yearOption.dataset.year;
+            
+            // Remove previous selection
+            yearOptions.forEach(option => option.classList.remove('selected'));
+            
+            // Add selection
+            yearOption.classList.add('selected');
+            selectedYear = year;
+            
+            // Enable next button
+            nextStep1.disabled = false;
+            
+            console.log('Selected year:', selectedYear);
+        }
+
+        // Select class
+        function selectClass(event) {
+            const classOption = event.currentTarget;
+            const className = classOption.dataset.class;
+            
+            // Remove previous selection
+            document.querySelectorAll('.class-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection
+            classOption.classList.add('selected');
+            selectedClass = className;
+            
+            // Enable next button
+            nextStep2.disabled = false;
+            
+            console.log('Selected class:', selectedClass);
+        }
+
+        // Select student
+        function selectStudent(event) {
+            const studentOption = event.currentTarget;
+            const studentName = studentOption.dataset.studentName;
+            const studentNumber = studentOption.dataset.studentNumber;
+            
+            // Remove previous selection
+            document.querySelectorAll('.student-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection
+            studentOption.classList.add('selected');
+            selectedStudent = {
+                name: studentName,
+                number: studentNumber
+            };
+            
+            // Enable next button en ga direct naar bevestiging
+            nextStep3.disabled = false;
+            console.log('Selected student:', selectedStudent);
+            goToStep(4);
+        }
+
+        // Go to next step
+        function goToStep(step) {
+            currentStep = step;
+            updateStepIndicator(step);
+            showStep(step);
+            
+            // Load class options if going to step 2
+            if (step === 2 && selectedYear) {
+                loadClassOptions(selectedYear);
+            }
+            
+            // Load students if going to step 3
+            if (step === 3 && selectedClass) {
+                loadStudents(selectedClass);
+            }
+            
+            // Update confirmation if going to step 4
+            if (step === 4 && selectedYear && selectedClass && selectedStudent) {
+                confirmYear.textContent = `Jaar ${selectedYear}`;
+                confirmClass.textContent = selectedClass;
+                confirmName.textContent = selectedStudent.name;
+                loginAsName.textContent = selectedStudent.name.split(' ')[0];
+            }
+        }
+
+        // Go to previous step
+        function goToPreviousStep() {
+            if (currentStep > 1) {
+                goToStep(currentStep - 1);
+            }
+        }
+
+        // Finish setup
+        function completeSetup() {
+            if (selectedStudent && selectedYear && selectedClass) {
+                // Save to localStorage
+                const userProfile = {
+                    name: selectedStudent.name,
+                    studentNumber: selectedStudent.number,
+                    year: selectedYear,
+                    class: selectedClass,
+                    loginDate: new Date().toISOString()
+                };
+                localStorage.setItem('interestLinkProfile', JSON.stringify(userProfile));
+                console.log('User logged in:', userProfile);
+
+                // Redirect immediately to the app homepage
+                window.location.href = 'main.html';
+            }
+        }
+
+        // Go to main app
+        function navigateToApp() {
+            // Redirect to main app
+            window.location.href = 'main.html';
+        }
+
+        // Event listeners
+        yearOptions.forEach(option => {
+            option.addEventListener('click', selectYear);
+        });
+
+        nextStep1.addEventListener('click', () => goToStep(2));
+        nextStep2.addEventListener('click', () => goToStep(3));
+        nextStep3.addEventListener('click', () => goToStep(4));
+
+        document.getElementById('backStep2').addEventListener('click', () => goToStep(1));
+        document.getElementById('backStep3').addEventListener('click', () => goToStep(2));
+        document.getElementById('backStep4').addEventListener('click', () => goToStep(3));
+        document.getElementById('backBtn').addEventListener('click', goToPreviousStep);
+
+        // Student search functionality
+        if (studentSearch) {
+            studentSearch.addEventListener('input', function() {
+                filterStudents(this.value);
+            });
+        }
+        
+        // Niet gevonden? Eigen naam toevoegen
+        const addCustomNameBtn = document.getElementById('addCustomName');
+        if (addCustomNameBtn) {
+            addCustomNameBtn.addEventListener('click', function() {
+                const entered = prompt('Voer je volledige naam in:');
+                if (entered && entered.trim().length > 1) {
+                    selectedStudent = { name: entered.trim(), number: 'custom' };
+                    nextStep3.disabled = false;
+                    goToStep(4);
+                }
+            });
+        }
+
+        finishSetup.addEventListener('click', completeSetup);
+        goToApp.addEventListener('click', navigateToApp);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                if (currentStep === 1 && !nextStep1.disabled) {
+                    goToStep(2);
+                } else if (currentStep === 2 && !nextStep2.disabled) {
+                    goToStep(3);
+                } else if (currentStep === 3 && !nextStep3.disabled) {
+                    goToStep(4);
+                } else if (currentStep === 4 && !finishSetup.disabled) {
+                    completeSetup();
+                }
+            } else if (e.key === 'Escape' && currentStep > 1) {
+                goToPreviousStep();
+            }
+        });
+
+
+        console.log('Login system initialized');
+    </script>
+</body>
+</html>
+
+

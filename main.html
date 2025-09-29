@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterestLink - Verbind door Interesses</title>
+    <link rel="stylesheet" href="Style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo">
+                        <h1>InterestLink</h1>
+                    </div>
+                    <nav class="main-nav">
+                        <a href="#" class="nav-item active">Home</a>
+                    </nav>
+                    <div class="header-search">
+                        <input id="postsSearch" type="text" placeholder="Zoek in posts (tekst, auteur of community)..." class="header-search-input" />
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="icon-btn" id="logout-btn" title="Uitloggen" style="display: none;">
+                            <i data-lucide="log-out"></i>
+                        </button>
+                        <div class="profile-menu" id="profileMenu">
+                            <button class="profile-trigger" id="profileTrigger" aria-haspopup="true" aria-expanded="false">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&face=center" alt="Profiel" class="profile-avatar">
+                                <span class="profile-initials">AH</span>
+                            </button>
+                            <div class="profile-dropdown" id="profileDropdown" role="menu" aria-hidden="true">
+                                <div class="profile-header">
+                                    <div class="profile-badge">AH</div>
+                                    <div class="profile-meta">
+                                        <div class="profile-name">Ahmed Al-Hassan</div>
+                                        <div class="profile-sub">Jaar 1 - 1A</div>
+                                    </div>
+                                </div>
+                                <button class="profile-item logout" data-action="logout">
+                                    <span class="pi-icon" data-lucide="log-out"></span>
+                                    <span>Uitloggen</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-layout">
+            <!-- Left Sidebar -->
+            <aside class="left-sidebar">
+                <div class="sidebar-content">
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">
+                            <i data-lucide="users"></i>
+                            Mijn Community's
+                        </h3>
+                        <ul class="community-list">
+                            <li class="community-item">
+                                <a href="https://discord.gg/upY9ExduDd" target="_blank" rel="noopener noreferrer">
+                                    <div class="community-dot bg-green"></div>
+                                    <span>Software Development</span>
+                                    <span class="member-count">234</span>
+                                </a>
+                            </li>
+                            <li class="community-item">
+                                <a href="https://discord.gg/upY9ExduDd" target="_blank" rel="noopener noreferrer">
+                                    <div class="community-dot bg-blue"></div>
+                                    <span>Web development</span>
+                                    <span class="member-count">567</span>
+                                </a>
+                            </li>
+                            <li class="community-item">
+                                <a href="https://discord.gg/upY9ExduDd" target="_blank" rel="noopener noreferrer">
+                                    <div class="community-dot bg-orange"></div>
+                                    <span>Cybersecurity</span>
+                                    <span class="member-count">123</span>
+                                </a>
+                            </li>
+                            <li class="community-item">
+                                <a href="https://discord.gg/upY9ExduDd" target="_blank" rel="noopener noreferrer">
+                                    <div class="community-dot bg-purple"></div>
+                                    <span>Data & AI</span>
+                                    <span class="member-count">789</span>
+                                </a>
+                            </li>
+                        </ul>
+                        
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3 class="sidebar-title">
+                            <i data-lucide="heart"></i>
+                            Mijn Interesses
+                        </h3>
+                        <div class="interests-grid">
+                            <!-- Beginnen met 0 interesses -->
+                            <div class="empty-interests" style="text-align: center; padding: 20px 0; color: #9ca3af; font-style: italic;">
+                                <div style="font-size: 32px; margin-bottom: 10px;">🤔</div>
+                                <p style="margin: 0; font-size: 14px;">Nog geen interesses toegevoegd</p>
+                                <p style="margin: 5px 0 0 0; font-size: 12px;">Klik hieronder om nu te beginnen!</p>
+                            </div>
+                        </div>
+                        <button class="add-btn" id="add-interest-btn">
+                            <i data-lucide="plus"></i>
+                            Intresses Toevoegen
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Feed -->
+            <main class="main-feed">
+                
+
+                <!-- Feed Content -->
+                <div class="feed-content">
+                    <!-- Post Creation -->
+                    <div class="post-creation">
+                        <div class="post-creation-header">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&face=center" alt="Jij" class="avatar">
+                            <div class="post-creation-input">
+                                <textarea id="postText" placeholder="Wat wil je delen met je community?" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="post-creation-footer">
+                            <div class="post-options">
+                                <button id="photoBtn" class="option-btn">
+                                    <i data-lucide="image"></i>
+                                    Foto
+                                </button>
+                                <input id="photoInput" type="file" accept="image/*" style="display:none">
+                                <select id="postCommunity" class="community-select">
+                                    <option value="" selected>Kies community...</option>
+                                    <option>Software Development</option>
+                                    <option>Web Development</option>
+                                    <option>Cybesecurity</option>
+                                    <option>Data & AI</option>
+                                </select>
+                            </div>
+                            <button id="postBtn" class="post-btn">Post</button>
+                        </div>
+                    </div>
+
+                    <!-- Posts Feed -->
+                    <div id="postsFeed" class="posts-feed">
+                        <!-- Post 1 -->
+                        <article class="post">
+                            <div class="post-header">
+                               <img src="IMAGE" alt="JAbir Ghalit" class="avatar">
+                                <div class="post-author-info">
+                                    <span class="author-name">Jabir Ghalit</span>
+                                    <div class="post-meta">
+                                        <span class="community-badge bg-blue">HTML&CSS</span>
+                                        <span class="timestamp">2u</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <p>Net even een flinke code geschreven in HTML maar CSS blijkt me toch nog iets te moeilijk te zijn zou iemand me kunne helpen met het opstellen van CSS en die eventueel creatieve ideen heeft ik ben te vinden in de bieb </p>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn">
+                                    <i data-lucide="heart"></i>
+                                    <span>24</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i data-lucide="message-circle"></i>
+                                    <span>8</span>
+                                </button>
+                            </div>
+                        </article>
+
+                        <!-- Post 2 -->
+                        <article class="post">
+                            <div class="post-header">
+                                <div class="avatar anonymous-avatar">
+                                    <i data-lucide="user"></i>
+                                </div>
+                                <div class="post-author-info">
+                                    <span class="author-name">Anonieme Gebruiker</span>
+                                    <div class="post-meta">
+                                        <span class="community-badge bg-blue">HTML&CSS</span>
+                                        <span class="timestamp">4u</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <p>heb nu dit maar welke command kan ik ook alweer de title van de tab als in helemaal boven veranderen!</p>
+                                <img src="Untitled-54.png" alt="HTML" class="post-image">
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn liked">
+                                    <i data-lucide="heart" class="filled"></i>
+                                    <span>42</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i data-lucide="message-circle"></i>
+                                    <span>15</span>
+                                </button>
+                            </div>
+                        </article>
+
+                        <!-- Post 3 -->
+                        <article class="post">
+                            <div class="post-header">
+                                <img src="koerdische vlag.png" alt="Alan zibar" class="avatar">
+                                <div class="post-author-info">
+                                    <span class="author-name">Alan Zibar</span>
+                                    <div class="post-meta">
+                                        <span class="community-badge bg-purple">Cybersecurity</span>
+                                        <span class="timestamp">6u</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <p>Hackers hebben weer eens duizenden informatie van honderden gebruikers door een datalek ze zouden eens is een keer ons moeten inhuren 
+                              </p>
+                                <img src="Schermopname (80).png" alt="Mountain sunset" class="post-image">
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn">
+                                    <i data-lucide="heart"></i>
+                                    <span>87</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i data-lucide="message-circle"></i>
+                                    <span>23</span>
+                                </button>
+                            </div>
+                        </article>
+
+                        <!-- Post 4 -->
+                        <article class="post">
+                            <div class="post-header">
+                                <img src="Cloud-internet-network-icon-cloud-data-Graphics-14084154-1-1-580x386.jpg" alt="Noah Taheij" class="avatar">
+                                <div class="post-author-info">
+                                    <span class="author-name">Noah Taheij</span>
+                                    <div class="post-meta">
+                                        <span class="community-badge bg-green">Cloud-</span>
+                                        <span class="timestamp">8u</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <p>Moet je eens kijken naar dit systeem van cloudfare omdat volledig willekeurige codes nogsteeds gekraakt kunnen worden gebruikt cloudfare lavalampen die worden bekeken door cameras en daar uit halen ze een code die niet te kraken valt>
+                                </p>
+                                <img src="c9e227e2-7839-4339-aaba-42d5d3713633.jpg" alt="Noah" class="post-media">
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn">
+                                    <i data-lucide="heart"></i>
+                                    <span>31</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i data-lucide="message-circle"></i>
+                                    <span>12</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i data-lucide="bookmark"></i>
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="right-sidebar">
+                <div class="sidebar-content">
+                    <!-- Suggested Users -->
+                    <div class="suggestion-card">
+                        <h3 class="card-title">
+                            <i data-lucide="user-plus"></i>
+                            Mensen die je kent
+                        </h3>
+                        <div class="suggestions-list">
+                            <div class="suggestion-item">
+                                <img src="https://images.unsplash.com/photo-1539605480396-a61f99da1041?w=40&h=40&fit=crop&face=center" alt="Emma Verhulst" class="avatar">
+                                <div class="suggestion-info">
+                                    <span class="suggestion-name">emma pieters</span>
+                                    <div class="suggestion-interests">
+                                        <span class="interest-badge">HTML&CSS</span>
+                                        <span class="interest-badge">Cloud</span>
+                                    </div>
+                                    <span class="mutual-friends">3 gemeenschappelijke vrienden</span>
+                                </div>
+                                <button class="follow-btn">Volgen</button>
+                            </div>
+                            
+                            <div class="suggestion-item">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&face=center" alt="Mark de Jong" class="avatar">
+                                <div class="suggestion-info">
+                                    <span class="suggestion-name">Mark de Jong</span>
+                                    <div class="suggestion-interests">
+                                        <span class="interest-badge">Technologie</span>
+                                        <span class="interest-badge">Gaming</span>
+                                    </div>
+                                    <span class="mutual-friends">7 gemeenschappelijke vrienden</span>
+                                </div>
+                                <button class="follow-btn">Volgen</button>
+                            </div>
+
+                            <div class="suggestion-item">
+                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&face=center" alt="Lisa Bakker" class="avatar">
+                                <div class="suggestion-info">
+                                    <span class="suggestion-name">Lisa Bakker</span>
+                                    <div class="suggestion-interests">
+                                        <span class="interest-badge">Ai</span>
+                                        <span class="interest-badge">Code</span>
+                                    </div>
+                                    <span class="mutual-friends">2 gemeenschappelijke vrienden</span>
+                                </div>
+                                <button class="follow-btn">Volgen</button>
+                            </div>
+
+                            <div class="suggestion-item">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&face=center" alt="Tom Janssen" class="avatar">
+                                <div class="suggestion-info">
+                                    <span class="suggestion-name">Tom Janssen</span>
+                                    <div class="suggestion-interests">
+                                        <span class="interest-badge">Gamedev</span>
+                                        <span class="interest-badge">Cybersecurity</span>
+                                    </div>
+                                    <span class="mutual-friends">5 gemeenschappelijke vrienden</span>
+                                </div>
+                                <button class="follow-btn">Volgen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Welcome Popup -->
+    <div id="welcome-popup" class="overlay hidden">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>🎯 Voeg je eerste interesses toe!</h3>
+                <button id="close-welcome" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">📚💻🎮</div>
+                    <p style="font-size: 16px; color: #333; margin-bottom: 20px; line-height: 1.5;">
+                        Welkom! Je hebt nog geen interesses toegevoegd. 
+                        <br><br>
+                        Selecteer uit meer dan <strong>50 ICT-gerelateerde onderwerpen</strong> om:
+                    </p>
+                    <ul style="text-align: left; color: #555; margin-bottom: 25px; padding-left: 20px;">
+                        <li>🤝 Gelijkgestemde mensen te vinden</li>
+                        <li>💬 Relevante discussies te volgen</li>
+                        <li>🎯 Gepersonaliseerde content te krijgen</li>
+                        <li>📈 Je netwerk uit te breiden</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button id="start-adding" class="btn" style="background: #22c55e; color: white; padding: 12px 24px; font-weight: 600;">
+                        🚀 Laten we beginnen!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interest Modal Overlay -->
+    <div id="interest-overlay" class="overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>ICT Interesses Toevoegen</h3>
+                <button id="close-overlay" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+ 
+
+                <div class="search-group">
+                    <label for="interest-search">Zoek interesse:</label>
+                    <input type="text" id="interest-search" placeholder="Zoek naar programmeren, data, security...">
+                </div>
+                <div class="interests-container">
+                    <div class="category-section">
+                        <h4 class="category-title">Programmeren & Ontwikkeling</h4>
+                        <div class="interest-options">
+                            <span class="selectable-interest" data-interest="JavaScript">JavaScript</span>
+                            <span class="selectable-interest" data-interest="Python">Python</span>
+                            <span class="selectable-interest" data-interest="Java">Java</span>
+                            <span class="selectable-interest" data-interest="C#">C#</span>
+                            <span class="selectable-interest" data-interest="PHP">PHP</span>
+                            <span class="selectable-interest" data-interest="React">React</span>
+                            <span class="selectable-interest" data-interest="Vue.js">Vue.js</span>
+                            <span class="selectable-interest" data-interest="Angular">Angular</span>
+                            <span class="selectable-interest" data-interest="Node.js">Node.js</span>
+                            <span class="selectable-interest" data-interest="Laravel">Laravel</span>
+                            <span class="selectable-interest" data-interest="Spring Boot">Spring Boot</span>
+                            <span class="selectable-interest" data-interest="Mobile App Development">Mobile App Development</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h4 class="category-title">Web & Design</h4>
+                        <div class="interest-options">
+                            <span class="selectable-interest" data-interest="HTML">HTML</span>
+                            <span class="selectable-interest" data-interest="CSS">CSS</span>
+                            <span class="selectable-interest" data-interest="Frontend Development">Frontend Development</span>
+                            <span class="selectable-interest" data-interest="Backend Development">Backend Development</span>
+                            <span class="selectable-interest" data-interest="Full Stack Development">Full Stack Development</span>
+                            <span class="selectable-interest" data-interest="UI/UX Design">UI/UX Design</span>
+                            <span class="selectable-interest" data-interest="Responsive Design">Responsive Design</span>
+                            <span class="selectable-interest" data-interest="WordPress">WordPress</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h4 class="category-title">Data & Analytics</h4>
+                        <div class="interest-options">
+                            <span class="selectable-interest" data-interest="Data Science">Data Science</span>
+                            <span class="selectable-interest" data-interest="Machine Learning">Machine Learning</span>
+                            <span class="selectable-interest" data-interest="Artificial Intelligence">Artificial Intelligence</span>
+                            <span class="selectable-interest" data-interest="Big Data">Big Data</span>
+                            <span class="selectable-interest" data-interest="Database Management">Database Management</span>
+                            <span class="selectable-interest" data-interest="SQL">SQL</span>
+                            <span class="selectable-interest" data-interest="Business Intelligence">Business Intelligence</span>
+                            <span class="selectable-interest" data-interest="Data Visualization">Data Visualization</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h4 class="category-title">Cybersecurity & Netwerken</h4>
+                        <div class="interest-options">
+                            <span class="selectable-interest" data-interest="Cybersecurity">Cybersecurity</span>
+                            <span class="selectable-interest" data-interest="Ethical Hacking">Ethical Hacking</span>
+                            <span class="selectable-interest" data-interest="Network Security">Network Security</span>
+                            <span class="selectable-interest" data-interest="Penetration Testing">Penetration Testing</span>
+                            <span class="selectable-interest" data-interest="Cloud Security">Cloud Security</span>
+                            <span class="selectable-interest" data-interest="Network Administration">Network Administration</span>
+                            <span class="selectable-interest" data-interest="Firewall Management">Firewall Management</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h4 class="category-title">Cloud & Infrastructuur</h4>
+                        <div class="interest-options">
+                            <span class="selectable-interest" data-interest="Cloud Computing">Cloud Computing</span>
+                            <span class="selectable-interest" data-interest="AWS">AWS</span>
+                            <span class="selectable-interest" data-interest="Azure">Azure</span>
+                            <span class="selectable-interest" data-interest="Google Cloud Platform">Google Cloud Platform</span>
+                            <span class="selectable-interest" data-interest="Docker">Docker</span>
+                            <span class="selectable-interest" data-interest="Kubernetes">Kubernetes</span>
+                            <span class="selectable-interest" data-interest="DevOps">DevOps</span>
+                            <span class="selectable-interest" data-interest="CI/CD">CI/CD</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h4 class="category-title">Game Development & VR</h4>
+                        <div class="interest-options">
+                            <span class="selectable-interest" data-interest="Game Development">Game Development</span>
+                            <span class="selectable-interest" data-interest="Unity">Unity</span>
+                            <span class="selectable-interest" data-interest="Unreal Engine">Unreal Engine</span>
+                            <span class="selectable-interest" data-interest="Virtual Reality (VR)">Virtual Reality (VR)</span>
+                            <span class="selectable-interest" data-interest="Augmented Reality (AR)">Augmented Reality (AR)</span>
+                            <span class="selectable-interest" data-interest="3D Modeling">3D Modeling</span>
+                            <span class="selectable-interest" data-interest="Game Design">Game Design</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h4 class="category-title">Emerging Technologies</h4>
+                        <div class="interest-options">
+                            <span class="selectable-interest" data-interest="Blockchain">Blockchain</span>
+                            <span class="selectable-interest" data-interest="Cryptocurrency">Cryptocurrency</span>
+                            <span class="selectable-interest" data-interest="IoT (Internet of Things)">IoT (Internet of Things)</span>
+                            <span class="selectable-interest" data-interest="Robotics">Robotics</span>
+                            <span class="selectable-interest" data-interest="Quantum Computing">Quantum Computing</span>
+                            <span class="selectable-interest" data-interest="5G Technology">5G Technology</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="selected-interests">
+                    <h4>Geselecteerde interesses:</h4>
+                    <div id="selected-list"></div>
+                </div>
+                               <div class="modal-footer">
+  <button id="cancel-btn" class="btn" type="button">Annuleren</button>
+  <button id="save-interest-btn" class="btn btn-primary" type="button">Toevoegen (0)</button>
+</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+            <div class="modal-header">
+                <h2 id="profileModalTitle">Mijn Profiel</h2>
+                <button class="modal-close" id="modalCloseBtn" aria-label="Sluiten">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <p class="modal-sub">Bekijk en bewerk je profiel informatie en bio.</p>
+
+            <div class="profile-card">
+                <div class="pc-left">
+                    <div class="pc-avatar">AH</div>
+                    <div class="pc-info">
+                        <div class="pc-name">Ahmed Al-Hassan</div>
+                        <div class="pc-sub">
+                            <i data-lucide="graduation-cap"></i>
+                            <span>Jaar 1</span>
+                            <i data-lucide="map-pin"></i>
+                            <span>1A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bio-block">
+                <div class="bio-title">Mijn Bio
+                    <button class="bio-edit" id="bioEditBtn">
+                        <i data-lucide="pen-line"></i>
+                        <span>Bewerken</span>
+                    </button>
+                </div>
+                <textarea id="bioTextarea" class="bio-textarea" placeholder="Geen bio toegevoegd. Klik op \"Bewerken\" om je bio toe te voegen." disabled></textarea>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-num" id="interestsCount">0</div>
+                    <div class="stat-label">Interesses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="communitiesCount">0</div>
+                    <div class="stat-label">Community's</div>
+                </div>
+            </div>
+
+            <div class="interests-block">
+                <div class="interests-title">Mijn Huidige Interesses</div>
+                <div class="chip-input" id="chipInput">
+                    <div class="chips" id="chips"></div>
+                    <input id="interestInput" class="chip-text" type="text" placeholder="Typ een interesse en druk Enter" list="interestSuggestions" autocomplete="off">
+                    <datalist id="interestSuggestions"></datalist>
+                </div>
+            </div>
+
+            <div class="interests-block" style="margin-top: 14px;">
+                <div class="interests-title">Mijn Community's</div>
+                <div class="chip-input" id="communityChipInput">
+                    <div class="chips" id="communityChips"></div>
+                    <input id="communityInput" class="chip-text" type="text" placeholder="Typ een community en druk Enter" list="communitySuggestions" autocomplete="off">
+                    <datalist id="communitySuggestions"></datalist>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="modal-btn" id="modalCloseFooter">Sluiten</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        lucide.createIcons();
+        // LOGIN CHECK (adjusted to Index (1).html)
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedProfile = localStorage.getItem('interestLinkProfile');
+            if (!savedProfile) {
+                window.location.href = 'Index (1).html';
+                return;
+            }
+            const profile = JSON.parse(savedProfile);
+            const loginDate = new Date(profile.loginDate);
+            const now = new Date();
+            const daysPassed = (now - loginDate) / (1000 * 60 * 60 * 24);
+            if (daysPassed > 7) {
+                localStorage.removeItem('interestLinkProfile');
+                window.location.href = 'Index (1).html';
+                return;
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
